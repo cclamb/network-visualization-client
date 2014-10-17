@@ -1,0 +1,1 @@
+NetworkVisualizationClient.ApplicationAdapter = DS.FixtureAdapter;
