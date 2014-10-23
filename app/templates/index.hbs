@@ -82,31 +82,46 @@ force.on('tick', function() {
 
 d3.json('http://127.0.0.1:4567/dmz', function(err, data) {
   //debugger;
-  var node_map = {}, link_map = {};
+  //var node_map = {}, link_map = {}, idx = 0;
+  var nodes = [], links = [], map = {}, idx = 0;
   // data.nodes.forEach(function(d, i) {
   //   d.id = i;
   // });
   data.forEach(function(d) {
     var src_id = d.protocol + '://' + d.src_addr + ':' + d.src_port, 
-      dst_id = d.protocol + '://' + d.dst_addr + ':' + d.dst_port;
+      dst_id = d.protocol + '://' + d.dst_addr + ':' + d.dst_port,
+      src_idx = map[src_id],
+      dst_idx = map[dst_id];
 
-    node_map[src_id] = { id: src_id };
-    node_map[dst_id] = { id: dst_id };
+    if (src_idx === undefined) {
+      nodes.push({ id: src_id, weight: 1 });
+      src_idx = idx;
+      map[src_id] == idx++;
+    }
+    if (dst_idx === undefined) {
+      nodes.push({ id: dst_id, weight: 1 });
+      dst_idx = idx;
+      map[dst_id] == idx++;
+    }
 
-    link_map[src_id + '->' + dst_id] = {
-      source: src_id,
-      target: dst_id,
+    links.push({
+      source: src_idx,
+      target: dst_idx,
       value: 1
-    };
+    });
+
+    idx += 2;
   });
 
-  var nodes = Object.keys(node_map).map(function (key) {
-    return node_map[key];
-  });
+  debugger;
 
-  var links = Object.keys(link_map).map(function (key) {
-    return link_map[key];
-  });
+  // var nodes = Object.keys(node_map).map(function (key) {
+  //   return node_map[key];
+  // });
+
+  // var links = Object.keys(link_map).map(function (key) {
+  //   return link_map[key];
+  // });
 
   //debugger;
 
