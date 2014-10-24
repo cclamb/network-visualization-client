@@ -81,12 +81,9 @@ force.on('tick', function() {
 });
 
 d3.json('http://127.0.0.1:4567/dmz', function(err, data) {
-  //debugger;
-  //var node_map = {}, link_map = {}, idx = 0;
+
   var nodes = [], links = [], map = {}, idx = 0;
-  // data.nodes.forEach(function(d, i) {
-  //   d.id = i;
-  // });
+
   data.forEach(function(d) {
     var src_id = d.protocol + '://' + d.src_addr + ':' + d.src_port, 
       dst_id = d.protocol + '://' + d.dst_addr + ':' + d.dst_port,
@@ -98,6 +95,7 @@ d3.json('http://127.0.0.1:4567/dmz', function(err, data) {
       src_idx = idx;
       map[src_id] == idx++;
     }
+    
     if (dst_idx === undefined) {
       nodes.push({ id: dst_id, weight: 1 });
       dst_idx = idx;
@@ -110,38 +108,14 @@ d3.json('http://127.0.0.1:4567/dmz', function(err, data) {
       value: 1
     });
 
-    idx += 2;
   });
 
-  debugger;
-
-  // var nodes = Object.keys(node_map).map(function (key) {
-  //   return node_map[key];
-  // });
-
-  // var links = Object.keys(link_map).map(function (key) {
-  //   return link_map[key];
-  // });
-
-  //debugger;
-
-  // link = svg.selectAll('.link')
-  //   .data( data.links )
-  // .enter().append('line')
-  //   .attr('class', 'link')
-  //   .style("stroke-width", function(d) { return Math.sqrt(d.value); });
   link = svg.selectAll('.link')
     .data( links )
   .enter().append('line')
     .attr('class', 'link')
     .style('stroke-width', function(d) { return Math.sqrt(d.value); });
 
-  // node = svg.selectAll('.node')
-  //   .data( data.nodes )
-  // .enter().append('g')
-  //   .attr('title', name)
-  //   .attr('class', 'node')
-  //   .call( force.drag );
   node = svg.selectAll('.node')
     .data( nodes )
   .enter().append('g')
@@ -158,9 +132,6 @@ d3.json('http://127.0.0.1:4567/dmz', function(err, data) {
     .attr('r', 4)
     .attr('stroke', 'black');
 
-  // force.nodes( data.nodes )
-  //   .links( data.links )
-  //   .start();
   force.nodes( nodes )
     .links( links )
     .start();
